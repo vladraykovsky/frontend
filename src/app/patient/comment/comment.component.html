@@ -1,0 +1,16 @@
+
+<p *ngIf="true; then descriptionBlock else add"> </p>
+
+<ng-template #descriptionBlock>
+  <p *ngFor="let commentr of comments" (click)="lock(commentr)">{{commentr.comment_value}} >
+    <button (click)="delete()">delete</button>
+    <button (click)="showAdd()">add</button>
+  </p>
+</ng-template>
+<ng-template #add>
+  <textarea [(ngModel)]="comment_value"></textarea>
+  <input [(ngModel)]="patient_id"/>
+  <button (click)="add()">save</button>
+</ng-template>
+<ng-template #edit></ng-template>
+
