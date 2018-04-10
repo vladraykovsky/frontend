@@ -1,16 +1,34 @@
 
-<p *ngIf="true; then descriptionBlock else add"> </p>
+<body>
 
-<ng-template #descriptionBlock>
-  <p *ngFor="let commentr of comments" (click)="lock(commentr)">{{commentr.comment_value}} >
-    <button (click)="delete()">delete</button>
-    <button (click)="showAdd()">add</button>
-  </p>
+<h1>{{patient.name}}  {{patient.surname}} </h1>
+<p *ngIf="count == 1;then  commentList"></p>
+<p *ngIf="count == 2;then  addBlock"></p>
+<p *ngIf="count == 3;then  updateBlock"></p>
+
+
+<ng-template #commentList>
+  <button (click)="count = 3 ">change</button>
+  <button (click)="count = 2 ">add</button>
+  <p> comments </p>
+  <li *ngFor="let item of comments" (click)="lock(item)">
+    <span>{{item.comment_value}} </span>  <button (click)="delete(item)"> delete comment</button>
+  </li>
 </ng-template>
-<ng-template #add>
-  <textarea [(ngModel)]="comment_value"></textarea>
-  <input [(ngModel)]="patient_id"/>
+
+<ng-template #addBlock>
+  <button (click)="count = 1">back</button>
+  <h3>{{comment_value}} </h3>
+  <input [(ngModel)]="comment_value"/>
   <button (click)="add()">save</button>
 </ng-template>
-<ng-template #edit></ng-template>
 
+
+<ng-template #updateBlock>
+  <button (click)="count = 1">back</button>
+  <h3>{{comment.comment_value}} </h3>
+  <input [(ngModel)]="comment.comment_value"/>
+  <button (click)="edit()">submit changes</button>
+</ng-template>
+
+</body>

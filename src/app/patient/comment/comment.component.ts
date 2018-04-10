@@ -1,68 +1,80 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CommentModel} from './comment.model';
 import {CommentService} from './comment.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Patient} from '../patient';
 
 
 @Component({
   selector: 'app-comment',
-  template:
-  '<p *ngIf="true; then descriptionBlock else add"> </p>' +
-  '<ng-template #descriptionBlock>' +
-  '  <p *ngFor="let commentr of comments" (click)="lock(commentr)">{{commentr.comment_value}}>' +
-  '    <button (click)="delete()">delete</button>\n' +
-  '    <button (click)="showAdd()">add</button>\n' +
-  '  </p>' +
-  '</ng-template>' +
-  '<ng-template #add>' +
-  '  <textarea [(ngModel)]="comment_value"></textarea>' +
-  '  <input [(ngModel)]="patient_id"/>' +
-  '  <button (click)="add()">save</button>' +
-  '</ng-template>' +
-  '<ng-template #edit></ng-template>',
+  templateUrl: './comment.component.html',
+  styleUrls: ['./comment.component.css'],
   providers: [CommentService]
 })
-export class CommentComponent implements OnInit {
-  static comment_id: number;
-         comment_value: string;
-         patient_id: number;
+export class CommentComponent implements OnChanges {
+
+  static comment_id = 0;
+  comment_value: string = 'enter text';
   comment: CommentModel;
-  comments: CommentModel[];
-  switcher = 1;
+  comments: CommentModel[] = [];
+  commentsAll: CommentModel[] = [];
+  count: number = 1;
+
+  @Input() patient: Patient;
+
 
   constructor(private componentservice: CommentService) {}
 
-  ngOnInit(): void {
-    this.componentservice.getData().subscribe(data => {this.comments = <CommentModel[]> data ; });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.patient !== null) {
+      this.componentservice.getCommentByForeign(this.patient.patient_id).subscribe(data => {
+        this.comments = <CommentModel[]> data;
+      });
+
+      this.componentservice.getAll().subscribe((data => {
+        this.commentsAll = <CommentModel[]>data;
+      }));
+      if (this.commentsAll.length > 0) {
+        CommentComponent.comment_id = this.commentsAll[this.commentsAll.length - 1].comment_id;
+        console.log(this.commentsAll[this.commentsAll.length - 1]);
+      }
+    }
   }
 
+   delete(comment: CommentModel): void {
+    this.componentservice.doDelete(<CommentModel>comment).subscribe((data: CommentModel) => {comment = data; });
+    console.log('delete comment');
+    console.log(comment);
+    let index = this.comments.indexOf(this.comment);
+       this.comments.splice(index, 1);
+     if ( index > 0) {
+       this.comment = this.comments[index - 1];
+     }
+     if ( index === 0) {
+       this.comment = this.comments[index + 1];
+     }
 
-   delete(): void {
-    this.componentservice.doDelete(this.comment);
   }
 
    add(): void {
-    const commentadd  = new CommentModel(CommentComponent.comment_id, this.comment_value, this.patient_id);
-    this.comments.unshift(commentadd);
-    this.componentservice.doPost(commentadd);
-    CommentComponent.comment_id++;
-    this.switcher = 1;
+
+     CommentComponent.comment_id++;
+     let commentadd: CommentModel  = new CommentModel(CommentComponent.comment_id , this.comment_value, <number>this.patient.patient_id);
+     console.log(commentadd);
+     this.componentservice.doPost(commentadd).subscribe((data: CommentModel) => {commentadd = data; } ,
+       error => console.log(error) );
+    this.comments.unshift(<CommentModel>commentadd);
+    this.count = 1;
   }
+
 
    edit(): void {
-    this.componentservice.doPatch(this.comment);
+    this.componentservice.doPatch(this.comment).subscribe((data: CommentModel) => {this.comment = data; } ,
+      error => console.log(error) );
+    this.count = 1;
   }
-
 
   lock(comment: CommentModel): void {
    this.comment = comment;
+   console.log(comment);
   }
-
-  showAdd() {
-    this.switcher = 2;
-  }
-
-
-
-
 }

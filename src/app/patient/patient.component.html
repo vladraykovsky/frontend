@@ -1,3 +1,93 @@
-<p>hello</p>
-<app-comment></app-comment>
-<p>grr</p>
+<html>
+<title>
+</title>
+<head>
+</head>
+
+<body>
+<div class="search-component">
+<input [(ngModel)]="search" placeholder="enter name or surname"/>
+
+<button (click)="const = 2">add</button> <button (click)="const = 3">edit</button>
+<button (click)="deletePatient(patient)">delete</button>
+</div>
+<ng-template #patientListBlock>
+<div class="app-comment">
+  <ol>
+  <li  *ngFor="let patient of patients | filter : search" (click)="switchPatient(patient)">
+    <a>{{patient.name}} {{patient.surname}}</a>
+</li>
+  </ol>
+  <br />
+  </div>
+</ng-template>
+
+<p *ngIf="const == 1;then patientListBlock else patientListBlock"></p>
+<p *ngIf="const == 1;then descriptionBlock">
+</p>
+<p *ngIf="const == 2;then addBlock">
+</p>
+<p *ngIf="const == 3;then editBlock">
+</p>
+
+
+
+  <ng-template #descriptionBlock>
+    <article>
+      <div class="app-comment">date of birth:  {{patient.date_of_birth}} <br />
+         country : {{patient.country}}<br />
+         state : {{patient.state}} <br />
+         address : {{patient.address}}<br />
+        sex : {{patient.sex}}<br />
+      </div>
+      <div class="app-comment"><app-comment [patient]="patient"></app-comment> <br /> </div>
+      <br class="clear" />
+    </article>
+
+  </ng-template>
+
+ <ng-template #addBlock>
+   <article>
+   <button (click)="const = 1"> back </button>
+   <h1>{{name}}</h1>
+   <input [(ngModel)]="name" placeholder="name"/>
+   <h1>{{surname}}</h1>
+   <input [(ngModel)]="surname" placeholder="surname"/>
+   <h1>{{date_of_birth}}</h1>
+   <input [(ngModel)]="date_of_birth" placeholder="date of birth in format ****-**-**"/>
+   <h1>{{country}}</h1>
+   <input [(ngModel)]="country" placeholder="country"/>
+   <h1>{{state}}</h1>
+   <input [(ngModel)]="state" placeholder="state"/>
+   <h1>{{address}}</h1>
+   <input [(ngModel)]="address" placeholder="adress"/>
+   <h1>{{sex}}</h1>
+   <input [(ngModel)]="sex" placeholder="sex"/>
+   <button (click)="savePatient()">add patient</button>
+   </article>
+ </ng-template>
+
+  <ng-template #editBlock>
+    <article>
+    <button (click)="const = 1">back</button>
+    <h1>{{patient.name}}</h1>
+    <input [(ngModel)]="patient.name"/>
+    <h1>{{patient.surname}}</h1>
+    <input [(ngModel)]="patient.surname"/>
+    <h1>{{patient.date_of_birth}}</h1>
+    <input [(ngModel)]="patient.date_of_birth"/>
+    <h1>{{patient.country}}</h1>
+    <input [(ngModel)]="patient.country"/>
+    <h1>{{patient.state}}</h1>
+    <input [(ngModel)]="patient.state"/>
+    <h1>{{patient.address}}</h1>
+    <input [(ngModel)]="patient.address"/>
+    <h1>{{patient.sex}}</h1>
+    <input [(ngModel)]="patient.sex"/>
+    <button (click)="editPatient()"> save changes </button>
+    </article>
+  </ng-template>
+
+
+</body>
+</html>
