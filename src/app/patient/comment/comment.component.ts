@@ -52,15 +52,14 @@ export class CommentComponent implements OnChanges {
      if ( index === 0) {
        this.comment = this.comments[index + 1];
      }
-
   }
 
    add(): void {
-
      CommentComponent.comment_id++;
      let commentadd: CommentModel  = new CommentModel(CommentComponent.comment_id , this.comment_value, <number>this.patient.patient_id);
      console.log(commentadd);
-     this.componentservice.doPost(commentadd).subscribe((data: CommentModel) => {commentadd = data; } ,
+     this.componentservice.doPost(commentadd).subscribe((data: CommentModel) => {
+       commentadd = data; } ,
        error => console.log(error) );
     this.comments.unshift(<CommentModel>commentadd);
     this.count = 1;

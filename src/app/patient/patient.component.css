@@ -5,6 +5,8 @@ article {
   overflow: hidden;
 }
 
+
+
 div.app-comment{
   float: left;
   margin: 1em;
@@ -12,16 +14,18 @@ div.app-comment{
   clear: both;
  }
 
-div.app-comment.ul.li:hover,
-div.app-comment.ul.li:active{
+div.left.ul.li:hover,
+div.left.ul.li:active{
   font-size: 120%;
 }
 
 .app-comment{
   width:250px;
   margin:0 auto;
+  display: flex;
+  justify-content: space-between;
+  border: solid;
 }
-
 .app-comment ol{
   counter-reset: li;
   list-style: none;
@@ -56,7 +60,7 @@ div.app-comment.ul.li:active{
   transform: scale(1.1);
 }
 
-.list-type1 a:before{
+.app-comment a:before{
   content: counter(li);
   counter-increment: li;
   position: absolute;

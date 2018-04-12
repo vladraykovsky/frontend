@@ -17,6 +17,7 @@ export class PatientComponent implements OnInit {
 
   search: string = '';
 
+  static patient_id = 0;
   name: string = '';
   surname: string = '';
   date_of_birth: string = '';
@@ -27,7 +28,7 @@ export class PatientComponent implements OnInit {
 
   const: number = 1;
 
-  constructor(public patientservice: PatientService , public changeDetector: ChangeDetectorRef) {
+  constructor(public patientservice: PatientService ) {
   }
 
 
@@ -47,7 +48,8 @@ export class PatientComponent implements OnInit {
 
 
   editPatient(): void {
-    this.patientservice.doPatch(this.patient).subscribe((data: Patient ) => {this.patient = data; },
+    this.patientservice.doPatch(this.patient).subscribe((data: Patient ) => {this.patient = <Patient>data;
+    console.log(data); },
       error => console.log(error));
     this.const = 1;
   }
@@ -55,21 +57,19 @@ export class PatientComponent implements OnInit {
 
 
   savePatient(): void {
-    let patient: Patient = new Patient(0 , this.name , this.surname , this.date_of_birth,
+    PatientComponent.patient_id = this.patients[this.patients.length - 1].patient_id;
+    PatientComponent.patient_id++;
+    let patient: Patient = new Patient(PatientComponent.patient_id , this.name , this.surname , this.date_of_birth,
       this.country, this.state, this.address, this.sex );
-    this.patients.push(patient);
-    this.patientservice.doPost(patient).subscribe((data: Patient ) => { patient = data; },
-      error => console.log(error));
+    this.patientservice.doPost(patient).subscribe(response => {console.log(response); } );
     this.patient = patient;
+    this.patients.push(patient);
     this.const = 1;
   }
 
 
 
   deletePatient(patient: Patient): void  {
-    let patient_cascade = new Patient(patient.patient_id , '',
-       '', '', '', '', '', '');
-    this.patientservice.doDeleteCascade(patient_cascade).subscribe((data: Patient) => {patient_cascade = data; });
      this.patientservice.doDelete(patient).subscribe((data: Patient) => {
        this.patients = this.patients.filter(p => p !== patient);
      });
@@ -82,5 +82,4 @@ export class PatientComponent implements OnInit {
       this.patient = this.patients[index + 1];
     }
   }
-
 }

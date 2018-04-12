@@ -11,7 +11,7 @@ export class PatientService {
 
 
   getData() {
-    return this.http.get<Patient[]>('https://morning-anchorage-39495.herokuapp.com/api/patient');
+    return this.http.get('https://morning-anchorage-39495.herokuapp.com/api/patient');
   }
 
   getFirst() {
@@ -30,7 +30,7 @@ export class PatientService {
     const body = {patient_id: patient.patient_id, name: patient.name, surname: patient.surname,
       date_of_birth: patient.date_of_birth, country: patient.country, state: patient.state, address: patient.address,
       sex: patient.sex };
-    return this.http.patch<Patient>('https://morning-anchorage-39495.herokuapp.com/api/patient', body, httpOptions);
+    return this.http.patch('https://morning-anchorage-39495.herokuapp.com/api/patient/update', body, httpOptions);
   }
 
 
@@ -39,22 +39,21 @@ export class PatientService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
-        'Authorization': 'my-auth-token'
+        'Authorization': 'my-auth-token;charset=UTF-8'
       })
     };
-
     const body = {patient_id: patient.patient_id, name: patient.name, surname: patient.surname,
       date_of_birth: patient.date_of_birth, country: patient.country, state: patient.state, address: patient.address,
       sex: patient.sex};
-    return this.http.post<Patient>('https://morning-anchorage-39495.herokuapp.com/api/patient', body, httpOptions);
+    console.log('sending' );
+    return this.http.post<Patient>('https://morning-anchorage-39495.herokuapp.com/api/patient/add', patient );
   }
-
 
 
   doDelete(patient: Patient) {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
+        'Content-Type':  'application/json;charset=UTF-8',
         'Authorization': 'my-auth-token'
       })
     };
@@ -62,7 +61,7 @@ export class PatientService {
     const body = {patient_id: patient.patient_id, name: patient.name, surname: patient.surname,
       date_of_birth: patient.date_of_birth, country: patient.country, state: patient.state, address: patient.address,
       sex: patient.sex};
-    return this.http.delete<Patient>('https://morning-anchorage-39495.herokuapp.com/api/patient/' + body.patient_id.toString());
+    return this.http.delete('https://morning-anchorage-39495.herokuapp.com/api/patient/' + body.patient_id.toString());
   }
 
   doDeleteCascade(patient: Patient) {
@@ -74,7 +73,6 @@ export class PatientService {
     };
 
     const body = {comment_id: 0, comment_value: '', patient_id: patient.patient_id};
-    return this.http.post<Patient>('https://morning-anchorage-39495.herokuapp.com/api/comment/delete/foreign', body, httpOptions);
+    return this.http.post('https://morning-anchorage-39495.herokuapp.com/api/comment/delete/foreign', body, httpOptions);
   }
-
 }

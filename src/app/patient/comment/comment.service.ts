@@ -26,7 +26,7 @@ export class CommentService {
     };
 
     const body = {comment_id: comment.comment_id, comment_value: comment.comment_value, patient_id: comment.patient_id};
-    return this.http.patch<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment/update', body, httpOptions);
+    return this.http.patch<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment', body, httpOptions);
   }
 
   doPost(comment: CommentModel) {
@@ -39,7 +39,7 @@ export class CommentService {
 
     const body = {comment_id: comment.comment_id, comment_value: comment.comment_value, patient_id: comment.patient_id};
     console.log('sending');
-    return this.http.post<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment/add', JSON.stringify(body), httpOptions);
+    return this.http.post<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment', JSON.stringify(body), httpOptions);
   }
 
 
@@ -51,7 +51,7 @@ export class CommentService {
       })
     };
     const body = {comment_id: comment.comment_id, comment_value: comment.comment_value, patient_id: comment.patient_id};
-    return this.http.post<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment/delete', body, httpOptions);
+    return this.http.delete<CommentModel>('https://morning-anchorage-39495.herokuapp.com/api/comment/' + comment.comment_id.toString());
   }
 
 }
